@@ -1,0 +1,22 @@
+{
+  "name": "robos_de_videos",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aguedes2/robos_de_videos.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/aguedes2/robos_de_videos/issues"
+  },
+  "homepage": "https://github.com/aguedes2/robos_de_videos#readme",
+  "dependencies": {
+    "readline-sync": "^1.4.9"
+  }
+}
