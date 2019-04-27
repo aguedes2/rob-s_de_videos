@@ -19,8 +19,8 @@ function start() {
       prefixes,
       'Escolha uma opcao'
     );
-    const selectedPrefixtext = prefixes[selectedPrefixIndex];
-    return selectedPrefixIndex;
+    const selectedPrefixText = prefixes[selectedPrefixIndex];
+    return selectedPrefixText;
 
     console.log(selectedPrefixIndex);
   }
