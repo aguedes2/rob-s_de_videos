@@ -1,11 +1,16 @@
 const readline = require('readline-sync');
+const robos = {
+  text: require('./robos/index.js')
+};
 
 /** Agrupar tudo */
-function start() {
+async function start() {
   const content = {};
   //Termo de busca
   content.searchTerm = askAndReturnSearchTerm();
   content.prefix = askAndReturnPrefix();
+
+  await robos.text(content);
 
   function askAndReturnSearchTerm() {
     return readline.question(
@@ -22,10 +27,11 @@ function start() {
     const selectedPrefixText = prefixes[selectedPrefixIndex];
     return selectedPrefixText;
 
-    console.log(selectedPrefixIndex);
+    console.log(selectedPrefixText);
   }
 
-  console.log(content);
+  console.log('-------------------\n\nCONTEÚDO LIMPO\n\n--------------------');
+  // console.log(content.sourceContentSanitized);
 }
 
 start();
