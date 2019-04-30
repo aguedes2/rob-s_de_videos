@@ -11,12 +11,19 @@ const nlu = new NaturalLanguageUnderstandingV1({
   url: 'https://gateway.watsonplatform.net/natural-language-understanding/api/'
 });
 
-async function robo(content) {
+//Importando o arquivo State salvo ao realizar a pesquisa
+const state = require('./state.js');
+
+async function robo() {
+  const content = state.load(); //Carregados os termos da pesquisa
+
   await fetchContentFromWikipedia(content); //Baixar conteúdo do wikipedia
   sanitizeContent(content); //Limpar (sanitizar) conteúdo baixado
   breakContentIntoSentences(content); //Quebrar o conteúdo em sentenças
   limitMaximumSentences(content); //limitar a quantidade de sentenças na resposta
   await fechKeywordsOfAllSentences(content);
+
+  state.save(content); //salvando o conteúdo da consulta tratrado
 
   async function fetchContentFromWikipedia(content) {
     //altenticação na API algorithmia
@@ -27,7 +34,9 @@ async function robo(content) {
     const wikipediaAlgorithm = algorithmiaAuthenticated.algo(
       'web/WikipediaParser/0.1.2'
     );
-    const wikipediaResponse = await wikipediaAlgorithm.pipe(content.searchTerm);
+    const wikipediaResponse = await wikipediaAlgorithm.pipe(
+      content.termoPesquisa
+    );
     const wikipediaContent = wikipediaResponse.get();
 
     content.sourceContentOriginal = wikipediaContent.content;
