@@ -1,47 +1,16 @@
-const readline = require('readline-sync');
 const robos = {
-  text: require('./robos/index.js')
+  input: require('./robos/input.js'),
+  text: require('./robos/text.js'),
+  state: require('./robos/state.js')
 };
 
 /** Agrupar tudo */
 async function start() {
-  const content = {
-    maximumSentences: 10
-  };
-  //Termo de busca
-  content.searchTerm = askAndReturnSearchTerm();
-  content.prefix = askAndReturnPrefix();
-  // content.lang = askAndReturnLang(); -> Não está funcionando (Não envia a escolha da linguagem para o Algorithmia)
+  robos.input();
+  await robos.text();
 
-  await robos.text(content);
-
-  function askAndReturnSearchTerm() {
-    const termoPesquisa = readline.question(
-      'Escreva o assunto a ser pesquisado na Wikipedia: '
-    );
-    return termoPesquisa;
-  }
-
-  function askAndReturnPrefix() {
-    const prefixes = ['Quem e', 'O que e', 'A historia de'];
-    const selectedPrefixIndex = readline.keyInSelect(
-      prefixes,
-      'Escolha uma opcao'
-    );
-    const selectedPrefixText = prefixes[selectedPrefixIndex];
-    return selectedPrefixText;
-  }
-
-  function askAndReturnLang() {
-    const lang = ['en', 'pt', 'es'];
-    const selectedLangIndex = readline.keyInSelect(
-      lang,
-      'Escolha o idioma da pesquisa: '
-    );
-    const selectedLangText = lang[selectedLangIndex];
-    return selectedLangText;
-  }
-  console.log(JSON.stringify(content, null, 4));
+  const content = robos.state.load();
+  console.dir(content, { depth: null });
 }
 
 start();
