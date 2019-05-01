@@ -21,7 +21,8 @@ async function robo() {
   sanitizeContent(content); //Limpar (sanitizar) conteúdo baixado
   breakContentIntoSentences(content); //Quebrar o conteúdo em sentenças
   limitMaximumSentences(content); //limitar a quantidade de sentenças na resposta
-  await fechKeywordsOfAllSentences(content);
+  await fetchKeyWordsOfAllSentences(content);
+  await fetchFindTweets(content);
 
   state.save(content); //salvando o conteúdo da consulta tratrado
 
@@ -64,7 +65,9 @@ async function robo() {
      * @param {content.sourceContentOriginal} text
      */
     function removeBlankLinesAndMarkDown(text) {
+      //Quebra de linhas
       const allLines = text.split('\n');
+
       //remover linhas em branco
       const withoutBlankLinesAndMarkDown = allLines.filter(line => {
         if (line.trim().length === 0 || line.trim().startsWith('=')) {
@@ -105,7 +108,7 @@ async function robo() {
     content.sentences = content.sentences.slice(0, content.maximumSentences);
   }
 
-  async function fechKeywordsOfAllSentences(content) {
+  async function fetchKeyWordsOfAllSentences(content) {
     for (const sentence of content.sentences) {
       sentence.keywords = await fetchWatsonAndReturnKeyWords(sentence.text);
     }
@@ -131,6 +134,20 @@ async function robo() {
         }
       );
     });
+  }
+
+  //Função que verifica tweets relacionados ao assunto pesquisado
+  async function fetchFindTweets(content) {
+    const algoritmo = 'diego/RetrieveTweetsWithKeyword/0.1.2?';
+    const palavra = content.termoPesquisa;
+    algorithmia
+      .client(algorithmiaApiKey)
+      .algo(algoritmo)
+      .pipe(palavra)
+      .then(response => {
+        //console.log(response.result);
+        return response.result.length;
+      });
   }
 }
 
